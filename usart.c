@@ -23,3 +23,15 @@ unsigned char usart_receive(){
     }
     return UDR0;
 }
+
+void usart_transmit_string(const *char str){
+    while(*str){ //så lenge det er charakter igjen i strengen så er skal det transmittes
+        usart_transmit(*str);
+        str++;
+    }
+}
+
+void usart_transmitt_int(u_int8_t numb){
+    char int_to_char_buffer = numb;
+    usart_transmit(int_to_char_buffer);
+}
