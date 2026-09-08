@@ -1,11 +1,11 @@
 #include "usart.h"
 
-void usart_transmit(unsigned char data){
+int usart_transmit(char data){
     
     while(!(UCSR0A & (1<<UDRE0))){
     }
     UDR0 = data;
-
+    return 1;
 }
 
 void usart_init(unsigned int ubrr){
@@ -15,11 +15,24 @@ void usart_init(unsigned int ubrr){
     UCSR0C = (1<<URSEL0)|(1<<USBS0)|(3<<UCSZ00); //URSEL velger å skrive til UCSRC USBS setter stop antall bit til 2 UCSZ0 setter char size til 8 bit
 }
 
-unsigned char usart_receive(){
-    usart_init(MYUBRR);
+int usart_receive(){
 
     while(!(UCSR0A & (1<<RXC0))){
 
     }
     return UDR0;
+}
+
+//wrapper for å bruke printf()
+
+int usart_putchar(char data, FILE *stream)
+{
+    (void)stream;
+    return usart_transmit(data);
+}
+
+int usart_getchar(FILE *stream)
+{
+    (void)stream;
+    return usart_receive();
 }
