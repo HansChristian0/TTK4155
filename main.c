@@ -2,15 +2,22 @@
 #include "usart.h"
 #include "SRAM.h"
 #include "teste_SRAM.h"
+#include "adc.h"
 
 
 int main(void){
     //initalisering//
     usart_init(MYUBRR);
     fdevopen(usart_putchar,usart_getchar);
-    printf("nu kjor med");
     xmem_init();
     //initialisering//
-    printf("nu kjor med");
+    
     SRAM_test();
+    CLK_signal();
+
+    while(1){
+        volatile uint8_t* ADC = (uint8_t * ) 0x1000;
+        uint8_t value = *ADC;
+        printf("%d \n \r",value);
+    }
 }

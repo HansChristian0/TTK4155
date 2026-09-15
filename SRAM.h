@@ -1,6 +1,7 @@
 #include <avr/io.h> 
 #include "stdio.h"
-#define BASE_ADDRESS 0x1800
+#define BASE_ADDRESS 0x1000
+#define BASE_ADDRESS_SRAM 0x1400
 
 void xmem_init();
 
