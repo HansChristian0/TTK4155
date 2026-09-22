@@ -13,8 +13,10 @@
 
 void SPI_master_init();
 
-void SPI_master_transmit(char cData);
+void SPI_master_transmit(char cData,uint8_t slave);
 
-void SPI_slave_init(void);
+// void SPI_slave_init(void);
 
-char SPI_slave_receive(void);
+// char SPI_slave_receive(void); 
+
+void SPI_select_unit(uint8_t selected_unit);
