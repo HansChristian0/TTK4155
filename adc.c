@@ -2,6 +2,7 @@
 #include <avr/io.h>
 #include "util/delay.h"
 #include "stdio.h"
+#include "stdlib.h"
 
 void CLK_signal(){
     DDRD |= (1 << PD5); //setter DataDirection REgister D slik at PD5 er sat til ocillating OC1A aka outout for PWM
@@ -30,7 +31,7 @@ uint8_t adc_read(uint8_t channel){
     return value;
 }
 volatile uint8_t* pos_calibrate(){
-    volatile uint8_t min_max_xy[4] = {0,0,0,0}; //to første er x nest er y min så max
+    static volatile uint8_t min_max_xy[4] = {0,0,0,0}; //to første er x nest er y min så max
     printf("Hold til venstre \r \n"); 
     _delay_ms(20000);
     uint8_t var = adc_read(1);
@@ -62,21 +63,38 @@ volatile uint8_t* pos_calibrate(){
 }
 
 int8_t pos_read_percent_x(uint8_t* calibration, uint8_t curr_pos_x){
-    int8_t neutral_x = (calibration[0] + calibration[1]) / 2;
-    return (curr_pos_x - neutral_x)/(calibration[1]-neutral_x);
+    float neutral_x = (calibration[0] + calibration[1]) / 2.0f;
+    float range = (calibration[1] - calibration[0]) / 2.0f;
+    // printf("%d prosent X pos \r\n",curr_pos_x);
+    return (int8_t)(((curr_pos_x - neutral_x) / range) * 100.0f);
 }
 
 int8_t pos_read_percent_y(uint8_t* calibration, uint8_t curr_pos_y){
-    int8_t neutral_y = (calibration[2] + calibration[3]) / 2;
-    return (curr_pos_y - neutral_y)/(calibration[1]-neutral_y);
+    float neutral_y = (calibration[2] + calibration[3]) / 2.0f;
+    float range = (calibration[3] - calibration[2]) / 2.0f;
+    // printf("%d prosent X pos \r\n",curr_pos_x);
+    return (int8_t)(((curr_pos_y - neutral_y) / range) * 100.0f);
 }
 
-// pos_t pos_read(uint8_t* calibration){
-//     uint8_t x = adc_read(1);
-//     uint8_t y = adc_read(0);
-//     uint8_t neutral_x = (calibration[0] + calibration[1]) / 2;
-//     uint8_t neutral_y = (calibration[2] + calibration[3]) / 2;
-//     if(x >= calibration[1]*0.75){
-//         retun LEFT;
-//     }
-// }
+pos_t pos_read(int8_t percent_x, int8_t percent_y){
+    if(percent_x < -80 && abs(percent_y) < 20){
+        printf(" LEFT, x and y in condition: (%d, %d) \r \n", percent_x, percent_y);
+        return LEFT;
+    }
+    else if(percent_x > 80 && abs(percent_y) < 20){
+        printf(" RIGHT, x and y in condition: (%d, %d) \r \n", percent_x, percent_y);
+        return RIGHT;
+    }
+    else if(abs(percent_x) < 20 && percent_y > 80){
+        printf(" UP, x and y in condition: (%d, %d) \r \n", percent_x, percent_y);
+        return UP;
+    }
+    else if(abs(percent_x) < 20 && percent_y < -80){
+        printf(" DOWN, x and y in condition: (%d, %d) \r \n", percent_x, percent_y);
+        return DOWN;
+    }
+    else {
+        printf(" NEUTRAL, x and y in condition: (%d, %d) \r \n", percent_x, percent_y);
+        return NEUTRAL;
+    }
+}
