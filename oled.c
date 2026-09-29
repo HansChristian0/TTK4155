@@ -1,5 +1,5 @@
 #include "oled.h"
-
+#include "string.h"
 
 void oled_command(uint8_t command, uint8_t* args, uint8_t arg_len){
   PORTB &= ~(1<<DISP_DC); // setter D/C# lav for command
@@ -46,5 +46,25 @@ void read_font(char c,uint8_t *out){
   uint8_t index = c - ' '; //trekke fra mellomrom siden vi begynner på mellomrom
   for (uint8_t i = 0; i < FONTSIZE; i++){
     out[i] = pgm_read_byte(&(font5[index][i]));
+  }
+}
+
+int oled_print_char(char c){ // printer på 
+  uint8_t q[FONTSIZE];
+  read_font(c, q);
+  oled_data(q,FONTSIZE);
+  return 0;
+}
+
+void printff(char *str, uint8_t length, uint8_t page, uint8_t col){
+  oled_select_col(col,page);
+  for(int i = 0; i < length; i++){
+    oled_print_char(str[i]);
+  }
+}
+
+void oled_creat_menu(char *menu_list[], uint8_t len){
+  for (int i=0; i<len; i++) {
+    printff(menu_list[i], strlen(menu_list[i]), i, 2);
   }
 }

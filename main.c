@@ -11,6 +11,7 @@
 int main(void){
     //initalisering//
     usart_init(MYUBRR);
+    printf("lalalal");
     fdevopen(usart_putchar,usart_getchar);
     xmem_init();
     adc_init();
@@ -27,24 +28,23 @@ int main(void){
     SRAM_test();
     printf("start for faen");
     // while(1){
-    //     curr_pos_x = adc_read(1);
-    //     curr_pos_y = adc_read(0);
-    //     curr_pos_x_pad = adc_read(3);
-    //     curr_pos_y_pad = adc_read(2);
-    //     percent_pos_x = pos_read_percent_x(calibration, curr_pos_x);
-    //     percent_pos_y = pos_read_percent_y(calibration, curr_pos_y);
-    //     printf("Joystick: (%d, %d) \r\n", percent_pos_x, percent_pos_y);
-    //     pos_read(percent_pos_x, percent_pos_y);
-    //     printf("Pad: (%d,%d) \r \n", curr_pos_x_pad, curr_pos_y_pad);
-    //     _delay_ms(2000);
-    // }
+        //     curr_pos_x = adc_read(1);
+        //     curr_pos_y = adc_read(0);
+        //     curr_pos_x_pad = adc_read(3);
+        //     curr_pos_y_pad = adc_read(2);
+        //     percent_pos_x = pos_read_percent_x(calibration, curr_pos_x);
+        //     percent_pos_y = pos_read_percent_y(calibration, curr_pos_y);
+        //     printf("Joystick: (%d, %d) \r\n", percent_pos_x, percent_pos_y);
+        //     pos_read(percent_pos_x, percent_pos_y);
+        //     printf("Pad: (%d,%d) \r \n", curr_pos_x_pad, curr_pos_y_pad);
+        //     _delay_ms(2000);
+        // }
     SPI_master_init();
     oled_init();
-    uint8_t q[FONTSIZE];
-    read_font('Q', q);
     oled_clear();
-    oled_select_col(60,4);
-    oled_data(q,FONTSIZE);
+  
+    char *menu_list[7] = {"Nytt spill", "Dagens vits", "hei", "pa", "deg", "Nei", "jo"};
+    oled_creat_menu(menu_list, 7); 
     // _delay_ms(1000);
     // oled_clear();
     

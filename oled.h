@@ -4,7 +4,7 @@
 #include "fonts.h"
 #include "spi.h"
 
-#define FONTSIZE 8
+#define FONTSIZE 5
 // D/C# = 0
 #define OLED_SET_CONTRAST 0x81 // + 1 BYTE SOM SETTER KONTRAST 0 TIL 255
 #define OLED_DISP_ON 0xAF
@@ -31,8 +31,8 @@ void oled_clear();
 
 void read_font(char c,uint8_t *out);
 
+int oled_print_char(char c);
 
+void printff(char *str,uint8_t length ,uint8_t page,uint8_t col);
 
-
-
-
+void oled_creat_menu(char *menu_list[], uint8_t len);

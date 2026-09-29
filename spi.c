@@ -25,7 +25,7 @@ void SPI_transfer_n_bytes(const uint8_t *p_data, uint8_t len, uint8_t slave){
     SPI_select_unit(slave);
     for(uint8_t i = 0; i < len; i++){
         SPDR = p_data[i];
-        printf("%d \r \n",p_data[i]);
+
     /* Wait for transmission complete */ 
         while(!(SPSR & (1<<SPIF))){}
     }
