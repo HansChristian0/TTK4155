@@ -40,10 +40,12 @@ int main(void){
     // }
     SPI_master_init();
     oled_init();
-    uint8_t q = 0xFF;
-    oled_command(0xB5,0,0);
-    oled_data(&q,1);
-    // _delay_ms(1000);
+    uint8_t q[FONTSIZE];
+    read_font('Q', q);
     oled_clear();
-
+    oled_select_col(60,4);
+    oled_data(q,FONTSIZE);
+    // _delay_ms(1000);
+    // oled_clear();
+    
 }

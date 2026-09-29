@@ -1,10 +1,10 @@
 #include <avr/io.h> 
 #include "stdio.h"
 #include "stdint.h"
-//#include "fonts.h"
+#include "fonts.h"
 #include "spi.h"
 
-
+#define FONTSIZE 8
 // D/C# = 0
 #define OLED_SET_CONTRAST 0x81 // + 1 BYTE SOM SETTER KONTRAST 0 TIL 255
 #define OLED_DISP_ON 0xAF
@@ -28,6 +28,8 @@ void oled_data(uint8_t *data, uint8_t length);
 void oled_select_col(uint8_t column, uint8_t page);
 
 void oled_clear();
+
+void read_font(char c,uint8_t *out);
 
 
 

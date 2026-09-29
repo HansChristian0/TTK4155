@@ -16,16 +16,18 @@ void oled_data(uint8_t *data, uint8_t length){
 }
 
 void oled_init(){ // må initialiseres etter SPI init duh
+  uint8_t contrast = 255;
   PORTB &= ~(1<<DISP_RESET); // Sette reset lav for å starte initalisering
   _delay_us(4);
   PORTB |= (1<<DISP_RESET); // Setter reset høy gjen etter å ha ventet bittelitt 
   _delay_us(4);
   oled_command(OLED_DISP_ON,0,0); //skru på display etter reset
+  oled_command(OLED_SET_CONTRAST,&contrast,1);
 }
 
 void oled_select_col(uint8_t column, uint8_t page){
   uint8_t col_low = column & 0x0F; // sette nedre nibble
-  uint8_t col_high = (column) & 0xF0; //setter øvre nibble
+  uint8_t col_high = (column >> 4) & 0x0F; //setter øvre nibble
 
   oled_command(0xB0 | (page & 0x07),0,0); //velger page 
   oled_command(0x00| col_low, 0,0); //velger nedre nibble
@@ -37,5 +39,12 @@ void oled_clear(){
   for (int i = 0; i < 8; i++){
     oled_select_col(0,i);
     oled_data(null,128);
+  }
+}
+
+void read_font(char c,uint8_t *out){
+  uint8_t index = c - ' '; //trekke fra mellomrom siden vi begynner på mellomrom
+  for (uint8_t i = 0; i < FONTSIZE; i++){
+    out[i] = pgm_read_byte(&(font5[index][i]));
   }
 }
