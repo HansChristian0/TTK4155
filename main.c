@@ -40,16 +40,10 @@ int main(void){
     // }
     SPI_master_init();
     oled_init();
-    while(1){
-        SPI_master_transmit('q', SELECT_IO);
-        _delay_ms(1000);
-        uint8_t balle[] = {0x54, 0x34};
-        SPI_transfer_n_bytes(balle ,2,SELECT_IO);
-        // oled_comm oled_init();
-    // while(1){and(OLED_DISP_ON);
-        // _delay_ms(1000);
-        // oled_command(OLED_ENTIRE_DISP_ON);
-        // _delay_ms(2000);
-        // oled_command(OLED_ENTIRE_DISP_OFF);
-    }
+    uint8_t q = 0xFF;
+    oled_command(0xB5,0,0);
+    oled_data(&q,1);
+    // _delay_ms(1000);
+    oled_clear();
+
 }

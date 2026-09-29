@@ -3,7 +3,7 @@
 
 void SPI_master_init(){
     /* Set MOSI and SCK output, all others input */
-    DDRB |= (1<<DISP_SDIN)|(1<<DISP_SCK) |(1<<DISP_SS) |(1<<IO_SS) |(1<<DISP_RESET);
+    DDRB |= (1<<DISP_SDIN)|(1<<DISP_SCK) |(1<<DISP_SS) |(1<<IO_SS) |(1<<DISP_RESET) | (1<<DISP_DC);
     
     // kanskje sette ALt av SS til høyt så ingenting drives
     /* Enable SPI, Master, set clock rate fck/16 */
@@ -26,7 +26,6 @@ void SPI_transfer_n_bytes(const uint8_t *p_data, uint8_t len, uint8_t slave){
     for(uint8_t i = 0; i < len; i++){
         SPDR = p_data[i];
         printf("%d \r \n",p_data[i]);
-        _delay_ms(1000);
     /* Wait for transmission complete */ 
         while(!(SPSR & (1<<SPIF))){}
     }
