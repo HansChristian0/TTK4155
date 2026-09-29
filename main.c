@@ -5,6 +5,7 @@
 #include "adc.h"
 #include "util/delay.h"
 #include "spi.h"
+#include "oled.h"
 
 
 int main(void){
@@ -30,19 +31,25 @@ int main(void){
     //     curr_pos_y = adc_read(0);
     //     curr_pos_x_pad = adc_read(3);
     //     curr_pos_y_pad = adc_read(2);
-    //     // percent_pos_x = pos_read_percent_x(calibration, curr_pos_x);
-    //     // percent_pos_y = pos_read_percent_y(calibration, curr_pos_y);
-    //     // printf("Joystick: (%d, %d) \r\n", percent_pos_x, percent_pos_y);
-    //     // pos_read(percent_pos_x, percent_pos_y);
+    //     percent_pos_x = pos_read_percent_x(calibration, curr_pos_x);
+    //     percent_pos_y = pos_read_percent_y(calibration, curr_pos_y);
+    //     printf("Joystick: (%d, %d) \r\n", percent_pos_x, percent_pos_y);
+    //     pos_read(percent_pos_x, percent_pos_y);
     //     printf("Pad: (%d,%d) \r \n", curr_pos_x_pad, curr_pos_y_pad);
     //     _delay_ms(2000);
     // }
     SPI_master_init();
-
+    oled_init();
     while(1){
-        SPI_master_transmit('Q',1);
-        SPI_select_unit(2);
-
-        _delay_ms(1);
+        SPI_master_transmit('q', SELECT_IO);
+        _delay_ms(1000);
+        uint8_t balle[] = {0x54, 0x34};
+        SPI_transfer_n_bytes(balle ,2,SELECT_IO);
+        // oled_comm oled_init();
+    // while(1){and(OLED_DISP_ON);
+        // _delay_ms(1000);
+        // oled_command(OLED_ENTIRE_DISP_ON);
+        // _delay_ms(2000);
+        // oled_command(OLED_ENTIRE_DISP_OFF);
     }
 }
