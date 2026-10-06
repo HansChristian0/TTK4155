@@ -1,5 +1,8 @@
 #include "oled.h"
 #include "string.h"
+#include <ctype.h>
+
+uint8_t g_curr_page = 0;
 
 void oled_command(uint8_t command, uint8_t* args, uint8_t arg_len){
   PORTB &= ~(1<<DISP_DC); // setter D/C# lav for command
@@ -23,6 +26,8 @@ void oled_init(){ // må initialiseres etter SPI init duh
   _delay_us(4);
   oled_command(OLED_DISP_ON,0,0); //skru på display etter reset
   oled_command(OLED_SET_CONTRAST,&contrast,1);
+  oled_command(OLED_SEGMENT_REMAP,0,0);
+  oled_command(OLED_PAGE_REMAP,0,0);
 }
 
 void oled_select_col(uint8_t column, uint8_t page){
@@ -66,5 +71,46 @@ void printff(char *str, uint8_t length, uint8_t page, uint8_t col){
 void oled_creat_menu(char *menu_list[], uint8_t len){
   for (int i=0; i<len; i++) {
     printff(menu_list[i], strlen(menu_list[i]), i, 2);
+  }
+}
+
+void to_lower_except_first(char *str)
+{
+    for (int i = 1; str[i] != '\0'; i++) {
+        str[i] = tolower((unsigned char)str[i]);
+    }
+}
+
+void to_upper_except_first(char *str)
+{
+    for (int i = 1; str[i] != '\0'; i++) {
+        str[i] = toupper((unsigned char)str[i]);
+    }
+}
+
+void oled_menu_select(char *menu_list[], uint8_t length, pos_t direction) {
+  switch (direction)
+  {
+  case UP:
+    if (g_curr_page-1 >= 0) {
+      to_lower_except_first(menu_list[g_curr_page]);
+      printff(menu_list[g_curr_page], strlen(menu_list[g_curr_page]), g_curr_page,2);
+      g_curr_page -= 1;
+      to_upper_except_first(menu_list[g_curr_page]);
+      printff(menu_list[g_curr_page], strlen(menu_list[g_curr_page]), g_curr_page,2);
+    }
+
+    break;
+  case DOWN:
+    if (g_curr_page+1 <= length-1) {
+      to_lower_except_first(menu_list[g_curr_page]);
+      printff(menu_list[g_curr_page], strlen(menu_list[g_curr_page]), g_curr_page,2);
+      g_curr_page += 1;
+      to_upper_except_first(menu_list[g_curr_page]);
+      printff(menu_list[g_curr_page], strlen(menu_list[g_curr_page]), g_curr_page,2);
+    }
+
+  default:
+    break;
   }
 }

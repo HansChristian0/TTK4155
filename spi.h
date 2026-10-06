@@ -12,6 +12,8 @@
 #define DISP_SCK PB7
 #define SELECT_DISP 1
 #define SELECT_IO 2
+#define CAN_SS PD4
+#define CAN_INTERRUPT PD3
 
 
 

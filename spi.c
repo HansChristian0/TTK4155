@@ -2,14 +2,19 @@
 
 
 void SPI_master_init(){
-    /* Set MOSI and SCK output, all others input */
+    /* Set MOSI and SCK output, all others output */
     DDRB |= (1<<DISP_SDIN)|(1<<DISP_SCK) |(1<<DISP_SS) |(1<<IO_SS) |(1<<DISP_RESET) | (1<<DISP_DC);
     
     // kanskje sette ALt av SS til høyt så ingenting drives
     /* Enable SPI, Master, set clock rate fck/16 */
     SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);
 
-    PORTB |= (1<<DISP_RESET); // setter disp reset høy fra start
+    PORTB |= (1<<DISP_RESET) | (1<<DISP_SS) | (1<<IO_SS); // setter disp reset høy fra start
+
+    // CAN ports 
+    DDRD |= (1 << CAN_SS) |(1 << CAN_INTERRUPT);
+
+    PORTD |= (1<<CAN_SS);
 
 }
 
@@ -38,13 +43,18 @@ void SPI_select_unit(uint8_t selected_unit){
     case 1: //Display lav og IO høy aka velde display
         PORTB &= ~(1<<DISP_SS); 
         PORTB |= (1<<IO_SS);
+        PORTD |= (1<<CAN_SS);
         break;
     case 2: //display høy og IO lav aka velde IO
         PORTB &= ~(1<<IO_SS);
         PORTB |= (1<<DISP_SS);
+        PORTD |= (1<<CAN_SS);
         break;
     case 3:
         //for å velge en tredje enhet må legge til litt snadder på de andre casene og
+        PORTD &= ~(1<<CAN_SS); 
+        PORTB |= (1<<IO_SS);
+        PORTB |= (1<<DISP_SS);
         break;
     default:
         break;

@@ -3,6 +3,9 @@
 #include "stdint.h"
 #include "fonts.h"
 #include "spi.h"
+#include "adc.h"
+
+extern uint8_t g_curr_page;
 
 #define FONTSIZE 5
 // D/C# = 0
@@ -15,6 +18,9 @@
 #define OLED_ENTIRE_DISP_OFF 0xA4
 // SCROLL SETUP TROR JEG
 #define OLED_RIGHT_HORIZONTAL_SCROLL 0x26
+
+#define OLED_SEGMENT_REMAP 0xA1
+#define OLED_PAGE_REMAP 0xC8
 
 //ARESSE SETTING COMMAND TABLE foreslår page adressing
 #define OLED_SET_MEMORY_ADDRESSING_MODE 0x20 // + 1 ; lsb; OO = HORIZONTAL; 01 = VERTICAL ; 10= PAGE
@@ -36,3 +42,9 @@ int oled_print_char(char c);
 void printff(char *str,uint8_t length ,uint8_t page,uint8_t col);
 
 void oled_creat_menu(char *menu_list[], uint8_t len);
+
+void oled_menu_select(char *menu_list[], uint8_t length, pos_t direction);
+
+void to_lower_except_first(char *str);
+
+void to_upper_except_first(char *str);
