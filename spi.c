@@ -42,6 +42,7 @@ uint8_t SPI_master_read(uint8_t slave){
     uint8_t dummy = 0;
     SPDR = dummy; // sende noe tullball
     while(!(SPSR & (1<<SPIF))){} // vente til vi har sendt alt
+    SPI_deselect_unit(slave);
     return SPDR;
 }
 
@@ -50,7 +51,6 @@ void SPI_read_n_bytes(uint8_t *data, uint8_t length, uint8_t slave){ // lese av 
 
     for(uint8_t i = 0; i < length; i++){
         data[i] = SPI_master_read(slave);
-        printf("%d \r\n", data[i]);
         _delay_us(4);
     }
 }
@@ -79,6 +79,31 @@ void SPI_select_unit(uint8_t selected_unit){
         break;
     }
 
+
+}
+
+void SPI_deselect_unit(uint8_t unit){
+    switch (unit)
+    {
+    case 1: //deselect display
+
+        PORTB |= (1<<DISP_SS);
+
+        break;
+    case 2: //deselsct IIO
+       
+        PORTB |= (1<<IO_SS);
+
+        break;
+    case 3:
+        //deselset CAN
+
+        PORTD |= (1<<CAN_SS);
+
+        break;
+    default:
+        break;
+    }
 
 }
 

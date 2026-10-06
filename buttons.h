@@ -49,3 +49,4 @@ typedef struct __attribute__((packed)) {
 #endif
 
 Buttons read_buttons();
+uint8_t joystick_btn_pressed();

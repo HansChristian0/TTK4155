@@ -33,3 +33,5 @@ void SPI_read_n_bytes(uint8_t *data,uint8_t length, uint8_t slave);
 // char SPI_slave_receive(void); 
 
 void SPI_select_unit(uint8_t selected_unit);
+
+void SPI_deselect_unit(uint8_t unit);

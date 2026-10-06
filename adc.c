@@ -78,23 +78,23 @@ int8_t pos_read_percent_y(uint8_t* calibration, uint8_t curr_pos_y){
 
 pos_t pos_read(int8_t percent_x, int8_t percent_y){
     if(percent_x < -80 && abs(percent_y) < 20){
-        printf(" LEFT, x and y in condition: (%d, %d) \r \n", percent_x, percent_y);
+       
         return LEFT;
     }
     else if(percent_x > 80 && abs(percent_y) < 20){
-        printf(" RIGHT, x and y in condition: (%d, %d) \r \n", percent_x, percent_y);
+        
         return RIGHT;
     }
     else if(abs(percent_x) < 20 && percent_y > 80){
-        printf(" UP, x and y in condition: (%d, %d) \r \n", percent_x, percent_y);
+      
         return UP;
     }
     else if(abs(percent_x) < 20 && percent_y < -80){
-        printf(" DOWN, x and y in condition: (%d, %d) \r \n", percent_x, percent_y);
+       
         return DOWN;
     }
     else {
-        printf(" NEUTRAL, x and y in condition: (%d, %d) \r \n", percent_x, percent_y);
+       
         return NEUTRAL;
     }
 }

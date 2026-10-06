@@ -24,10 +24,10 @@ void oled_init(){ // må initialiseres etter SPI init duh
   _delay_us(4);
   PORTB |= (1<<DISP_RESET); // Setter reset høy gjen etter å ha ventet bittelitt 
   _delay_us(4);
-  oled_command(OLED_DISP_ON,0,0); //skru på display etter reset
   oled_command(OLED_SET_CONTRAST,&contrast,1);
   oled_command(OLED_SEGMENT_REMAP,0,0);
   oled_command(OLED_PAGE_REMAP,0,0);
+  oled_command(OLED_DISP_ON,0,0); //skru på display etter reset
 }
 
 void oled_select_col(uint8_t column, uint8_t page){
@@ -98,6 +98,7 @@ void oled_menu_select(char *menu_list[], uint8_t length, pos_t direction) {
       g_curr_page -= 1;
       to_upper_except_first(menu_list[g_curr_page]);
       printff(menu_list[g_curr_page], strlen(menu_list[g_curr_page]), g_curr_page,2);
+      _delay_ms(1000);
     }
 
     break;
@@ -108,6 +109,7 @@ void oled_menu_select(char *menu_list[], uint8_t length, pos_t direction) {
       g_curr_page += 1;
       to_upper_except_first(menu_list[g_curr_page]);
       printff(menu_list[g_curr_page], strlen(menu_list[g_curr_page]), g_curr_page,2);
+      _delay_ms(1000);
     }
 
   default:
