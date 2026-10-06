@@ -14,7 +14,7 @@
 #define SELECT_IO 2
 #define CAN_SS PD4
 #define CAN_INTERRUPT PD3
-
+#define SELECT_CAN 3
 
 
 
