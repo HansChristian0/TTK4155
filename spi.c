@@ -3,7 +3,8 @@
 
 void SPI_master_init(){
     /* Set MOSI and SCK output, all others output */
-    DDRB |= (1<<DISP_SDIN)|(1<<DISP_SCK) |(1<<DISP_SS) |(1<<IO_SS) |(1<<DISP_RESET) | (1<<DISP_DC);
+    DDRB |= (1<<MOSI)|(1<<DISP_SCK) |(1<<DISP_SS) |(1<<IO_SS) |(1<<DISP_RESET) | (1<<DISP_DC);
+    DDRB &= ~(1<<MISO); 
     
     // kanskje sette ALt av SS til høyt så ingenting drives
     /* Enable SPI, Master, set clock rate fck/16 */
@@ -33,6 +34,24 @@ void SPI_transfer_n_bytes(const uint8_t *p_data, uint8_t len, uint8_t slave){
 
     /* Wait for transmission complete */ 
         while(!(SPSR & (1<<SPIF))){}
+    }
+}
+
+uint8_t SPI_master_read(uint8_t slave){
+    SPI_select_unit(slave);
+    uint8_t dummy = 0;
+    SPDR = dummy; // sende noe tullball
+    while(!(SPSR & (1<<SPIF))){} // vente til vi har sendt alt
+    return SPDR;
+}
+
+void SPI_read_n_bytes(uint8_t *data, uint8_t length, uint8_t slave){ // lese av masse ulike greier som er mega fun
+    SPI_select_unit(slave);
+
+    for(uint8_t i = 0; i < length; i++){
+        data[i] = SPI_master_read(slave);
+        printf("%d \r\n", data[i]);
+        _delay_us(4);
     }
 }
 

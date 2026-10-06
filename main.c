@@ -5,7 +5,7 @@
 #include "util/delay.h"
 #include "spi.h"
 #include "oled.h"
-
+#include "buttons.h"
 
 int main(void){
     //initalisering//
@@ -16,8 +16,8 @@ int main(void){
     adc_init();
     CLK_signal();
     //initialisering//
-    uint8_t* calibration = pos_calibrate();
-    printf("%d %d %d %d", calibration[0], calibration[1], calibration[2], calibration[3]);
+    // uint8_t* calibration = pos_calibrate();
+    // printf("%d %d %d %d", calibration[0], calibration[1], calibration[2], calibration[3]);
     uint8_t curr_pos_x = 0;
     uint8_t curr_pos_y = 0;
     uint8_t curr_pos_x_pad = 0;
@@ -32,19 +32,31 @@ int main(void){
     oled_init();
     oled_clear();
     oled_creat_menu(menu_list, 7); 
-    while(1){
-            curr_pos_x = adc_read(1);
-            curr_pos_y = adc_read(0);
-            curr_pos_x_pad = adc_read(3);
-            curr_pos_y_pad = adc_read(2);
-            percent_pos_x = pos_read_percent_x(calibration, curr_pos_x);
-            percent_pos_y = pos_read_percent_y(calibration, curr_pos_y);
-            printf("Joystick: (%d, %d) \r\n", percent_pos_x, percent_pos_y);
-            direction = pos_read(percent_pos_x, percent_pos_y);
-            printf("Pad: (%d,%d) \r \n", curr_pos_x_pad, curr_pos_y_pad);
-            // _delay_ms(2000);
-            oled_menu_select(menu_list, 7, direction);
+    while (1)
+    {
+        Buttons btn = read_buttons();
+        if(btn.L5){
+            printf("L5");
         }
+        if(btn.R2){
+            printf("R2");
+        }
+    }
+    
+
+    // while(1){
+    //         curr_pos_x = adc_read(1);
+    //         curr_pos_y = adc_read(0);
+    //         curr_pos_x_pad = adc_read(3);
+    //         curr_pos_y_pad = adc_read(2);
+    //         percent_pos_x = pos_read_percent_x(calibration, curr_pos_x);
+    //         percent_pos_y = pos_read_percent_y(calibration, curr_pos_y);
+    //         printf("Joystick: (%d, %d) \r\n", percent_pos_x, percent_pos_y);
+    //         direction = pos_read(percent_pos_x, percent_pos_y);
+    //         printf("Pad: (%d,%d) \r \n", curr_pos_x_pad, curr_pos_y_pad);
+    //         // _delay_ms(2000);
+    //         oled_menu_select(menu_list, 7, direction);
+    //     }
   
     // _delay_ms(1000);
     // oled_clear();
