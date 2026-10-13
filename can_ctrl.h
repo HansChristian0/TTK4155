@@ -3,6 +3,7 @@
 #include "stdint.h"
 #include "util/delay.h"
 #include "spi.h"
+#include "can_cmds.h"
 
 #define CAN_RESET 0b11000000
 #define CAN_READ 0b00000011
@@ -24,9 +25,19 @@
 
 
 void can_ctrl_init();
-uint8_t can_read(uint8_t address);
+uint8_t can_ctrl_read(uint8_t address);
 
 void can_reset();
 
 void can_ctrl_write(uint8_t data, uint8_t addr);
 void can_set_loopback();
+
+void can_ctrl_request_to_send(uint8_t TXB);
+
+uint8_t can_ctrl_read_status();
+
+void can_ctrl_bit_modify(uint8_t reg, uint8_t mask, uint8_t);
+
+void can_ctrl_set_bit(uint8_t reg_addr, uint8_t bit);
+
+void can_ctrl_clear_bit(uint8_t reg_addr, uint8_t bit);

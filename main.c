@@ -35,7 +35,7 @@ int main(void){
     oled_clear();
     oled_creat_menu(menu_list, 7); 
     DDRB &= ~(1<<PB0);
-    can_set_loopback();
+    //can_set_loopback();
     can_ctrl_init();
     while(1){
             // curr_pos_x = adc_read(1);
@@ -57,9 +57,13 @@ int main(void){
             // if(btn.R6){
             //     printf("R6");
             // }
-            can_ctrl_write(0b10001000,0b00110101);
+
+            can_ctrl_write(0b10000100,0x30);
             _delay_ms(1000);
-            Can_data = can_read(0b00110101);
+            Can_data = can_ctrl_read(0x30);
+            printf("%d\r \n",Can_data);
+        
+
         }
   
     // _delay_ms(1000);
