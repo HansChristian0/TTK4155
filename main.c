@@ -12,40 +12,43 @@
 int main(void){
     //initalisering//
     usart_init(MYUBRR);
-    printf("lalalal");
     fdevopen(usart_putchar,usart_getchar);
     xmem_init();
     adc_init();
     CLK_signal();
-    //initialisering//
-    // uint8_t* calibration = pos_calibrate();
-    // printf("%d %d %d %d", calibration[0], calibration[1], calibration[2], calibration[3]);
-    uint8_t curr_pos_x = 0;
-    uint8_t curr_pos_y = 0;
-    uint8_t curr_pos_x_pad = 0;
-    uint8_t curr_pos_y_pad = 0;
-    int8_t percent_pos_x = 0;
-    int8_t percent_pos_y = 0;
-    pos_t direction = NEUTRAL;
-    uint8_t Can_data = 0;
-    SRAM_test();
-    printf("start for faen");
-    char *menu_list[7] = {"Nytt spill", "Dagens vits", "hei", "paa", "deg", "Nei", "jo"};
     SPI_master_init();
     oled_init();
     oled_clear();
+    //initialisering//
+    // uint8_t* calibration = pos_calibrate();
+    // printf("%d %d %d %d", calibration[0], calibration[1], calibration[2], calibration[3]);
+    printf("\n \nstart for faen\r\n");
+    char *menu_list[7] = {"Nytt spill", "Dagens vits", "hei", "paa", "deg", "Nei", "jo"};
     oled_creat_menu(menu_list, 7); 
     DDRB &= ~(1<<PB0);
     //can_set_loopback();
     can_ctrl_init();
-    Dataframe msg = {3,1,'Q'};
-    while(1){
-        can_com_transmit(& msg,0x00);
-        Can_data = can_ctrl_read(0x31);
-        printf("%d \r \n", Can_data);
-    }
-  
-    // _delay_ms(1000);
+    Dataframe msg;
+    msg.id = 8;
+    msg.data_len = 1;
+    msg.data[0] = 'a';
+    // msg.data[1] = 'b';
+    // msg.data[2] = 'c';
+    can_com_transmit(& msg,0x01);
+    
+    Dataframe new_msg;
+    printf("id: %d lengde: %d data: %d \r\n",new_msg.id,new_msg.data_len,new_msg.data);
+
+
+    can_com_receive(&new_msg);
+
+    printf("id: %d lengde: %d data: %c \r\n",new_msg.id,new_msg.data_len,new_msg.data[0]);
+    _delay_ms(1000);
+
+    printf("register verdien : %c", can_ctrl_read(MCP_RXB0D0));
+
+    while(1){}
+    return 0;
     // oled_clear();
     
 }

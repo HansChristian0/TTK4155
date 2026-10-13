@@ -155,5 +155,15 @@ Copyright 2003 Kimberly Otten Software Consulting
 #define MCP_MERRF		0x80
 
 
+#define MCP_TXB0SIDH 0x31
+
+#define MCP_TXB0SIDL 0x32
+
+#define MCP_TXB0DLC 0x35
+
+#define MCP_TXBD0 0x36
+#define MCP_RXB0DLC 0x65
+#define MCP_RXB0D0 0x66
+
 
 #endif

@@ -13,6 +13,7 @@ typedef struct{ // veldig usikker på om dette er no interessant i det hele tatt
     char data[]; // data
 }Dataframe;
 
-void can_com_load_tx(Dataframe *frame ,uint8_t buffer);
+void can_com_load_tx(Dataframe *frame);
 
 void can_com_transmit(const Dataframe *frame, uint8_t buffer);
+void can_com_receive(Dataframe *msg);
