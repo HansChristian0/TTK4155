@@ -41,3 +41,5 @@ void can_ctrl_bit_modify(uint8_t reg, uint8_t mask, uint8_t);
 void can_ctrl_set_bit(uint8_t reg_addr, uint8_t bit);
 
 void can_ctrl_clear_bit(uint8_t reg_addr, uint8_t bit);
+
+void can_ctrl_load_tx(uint8_t data,uint8_t buffer);

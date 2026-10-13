@@ -109,4 +109,4 @@ void can_ctrl_clear_bit(uint8_t reg_addr, uint8_t bit){ // setter mask til bit d
     mask = (1 << bit);
     can_ctrl_bit_modify(reg_addr,mask,data);
 }
-//
+

@@ -25,6 +25,7 @@ void SPI_master_transmit(char cData, uint8_t slave){
     SPDR = cData;
     /* Wait for transmission complete */ 
     while(!(SPSR & (1<<SPIF)));
+    
 }
 
 void SPI_transfer_n_bytes(const uint8_t *p_data, uint8_t len, uint8_t slave){

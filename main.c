@@ -7,6 +7,7 @@
 #include "oled.h"
 #include "buttons.h"
 #include "can_ctrl.h"
+#include "can_com.h"
 
 int main(void){
     //initalisering//
@@ -37,8 +38,23 @@ int main(void){
     DDRB &= ~(1<<PB0);
     //can_set_loopback();
     can_ctrl_init();
+    Dataframe msg = {3,1,'Q'};
     while(1){
-            // curr_pos_x = adc_read(1);
+        can_com_transmit(& msg,0x00);
+        Can_data = can_ctrl_read(0x31);
+        printf("%d \r \n", Can_data);
+    }
+  
+    // _delay_ms(1000);
+    // oled_clear();
+    
+}
+
+
+
+
+
+// curr_pos_x = adc_read(1);
             // curr_pos_y = adc_read(0);
             // curr_pos_x_pad = adc_read(3);
             // curr_pos_y_pad = adc_read(2);
@@ -58,15 +74,8 @@ int main(void){
             //     printf("R6");
             // }
 
-            can_ctrl_write(0b10000100,0x30);
-            _delay_ms(1000);
-            Can_data = can_ctrl_read(0x30);
-            printf("%d\r \n",Can_data);
+            // can_ctrl_write(0b10000100,0x30);
+            // _delay_ms(1000);
+            // Can_data = can_ctrl_read(0x30);
+            // printf("%d\r \n",Can_data);
         
-
-        }
-  
-    // _delay_ms(1000);
-    // oled_clear();
-    
-}

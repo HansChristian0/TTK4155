@@ -1,25 +1,30 @@
 #include "can_com.h"
 
-typedef struct{ // veldig usikker på om dette er no interessant i det hele tatt
-    //Start of frame bit
-    uint16_t id;// siste bit her er Remote transmition request
-    uint8_t data_len; //data len counter føreste bit er ID extended bit
-    uint8_t data; // data
-}dataframe;
 
 
-void can_com_transmit(const dataframe frame; uint8_t buffer){
-    can_ctrl_request_to_send(buffer); // request to send legger message 
-    
-    //putte data i TXn buffer!!! hvor putter jeg det???
-    
-    
-
-
+void can_com_load_tx( Dataframe *frame ,uint8_t buffer){ //buffer styrer hvor addr_pointer starter 000 -> TXB0SIDH 001->TXB0D0 010 -> TXB1SIDH 011-> TXBD1D0 100->TXB2SIDH 101->TXB2D0
+    buffer &= 0x07;
+    SPI_select_unit(SELECT_CAN);
+    SPI_master_transmit(0x40 | buffer,SELECT_CAN);
+    SPI_master_transmit(frame->id, SELECT_CAN);
+    SPI_master_transmit(frame->data_len,SELECT_CAN);
+    SPI_master_transmit(*(frame->data),SELECT_CAN);
+    SPI_deselect_unit(SELECT_CAN);
+    // for(uint8_t i = 0;  i < frame->data_len ; i++){
+    //     SPI_master_transmit(frame->data[i],SELECT_CAN);
+    // }
 }
 
-uint8_t can_com_receive(){
-    // no interrupt tullball
-
-
+void can_com_transmit(const Dataframe *frame, uint8_t buffer){
+    SPI_select_unit(SELECT_CAN);
+    can_com_load_tx(frame, buffer); // laster hele meldignern i tx buffer 
+ 
+    can_ctrl_request_to_send(buffer); // request to send legger message klar til sending fra samme buffer som vi lasta inn ista 
+    
 }
+
+//uint8_t can_com_receive(){
+//    // no interrupt tullball
+//
+//
+//}
