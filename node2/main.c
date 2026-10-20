@@ -23,9 +23,9 @@ int main()
     WDT->WDT_MR = WDT_MR_WDDIS; //Disable Watchdog Timer
 
     //inits
-    CanInit can_init_parameters = {.phase2 = 2, .propag = 2, .phase1 = 3, .sjw = 1, .brp = 20, .smp = 0};
+    CanInit can_init_parameters = {.phase2 = 1, .propag = 1, .phase1 = 2, .sjw = 1, .brp = 20, .smp = 0};
     can_init(can_init_parameters,0);
-    uart_init(84000000, 9600); //velger baud basert på vibes
+    uart_init(84000000, 115200); //velger baud basert på vibes
     //inits
 
 
@@ -34,7 +34,8 @@ int main()
     PMC->PMC_PCER0 = (1 << ID_PIOB);
     PIOB->PIO_PER = PIO_PB27;
     PIOB->PIO_OER = PIO_PB27;
-    CanMsg m = {.id = 67, .length = 1, .byte8 = 's'};
+    CanMsg m = {.id = 67, .length = 1, .byte8 = 'y'};
+    can_tx(m);
     while (1)
     {
         /* code */
@@ -42,8 +43,9 @@ int main()
         // for(int i = 0; i < 1000000;i++){}
         // PIOB->PIO_CODR = PIO_PB27;
         // for(int i = 0; i < 1000000;i++){}
-        can_rx(&m);
-        can_printmsg(m);
+        if(can_rx_buffered(&m)){
+            can_printmsg(m);
+        }
         
     }
     

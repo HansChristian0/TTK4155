@@ -1,4 +1,4 @@
-
+#define CAN_RX_BUF_SIZE 16
 #include "sam.h"
 #include "can.h"
 #include <stdio.h>
@@ -108,10 +108,12 @@ uint8_t can_rx(CanMsg* m){
     return 1;
 }
     
+static volatile uint8_t rx_head = 0;
+static volatile uint8_t rx_tail = 0;
+static volatile uint8_t rx_dropped = 0;
+static volatile CanMsg rx_buf[CAN_RX_BUF_SIZE];
     
 
-    
-/*
 // Example CAN interrupt handler
 void CAN0_Handler(void){
     char can_sr = CAN0->CAN_SR; 
@@ -119,7 +121,17 @@ void CAN0_Handler(void){
     // RX interrupt
     if(can_sr & (1 << rxMailbox)){
         // Add your message-handling code here
-        can_printmsg(can_rx());
+        CanMsg m;
+        can_rx(&m);
+        can_printmsg(m);
+        uint8_t next = (rx_head + 1) % CAN_RX_BUF_SIZE;
+        if(next != rx_tail){
+            rx_buf[rx_head] = m;
+            rx_head = next;
+        }
+        else{
+            rx_dropped++;
+        }
     } else {
         printf("CAN0 message arrived in non-used mailbox\n\r");
     }
@@ -131,5 +143,13 @@ void CAN0_Handler(void){
     
     NVIC_ClearPendingIRQ(ID_CAN0);
 } 
-*/
+
+uint8_t can_rx_buffered(CanMsg* m){
+    if(rx_tail == rx_head){
+        return 0;
+    }
+    *m = rx_buf[rx_tail];
+    rx_tail = (rx_tail + 1) % CAN_RX_BUF_SIZE;
+    return 0;
+}
 
