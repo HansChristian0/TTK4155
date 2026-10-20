@@ -1,5 +1,8 @@
 #include"stdint.h"
 
+#ifndef ADC_H
+#define ADC_H
+
 void CLK_signal();
 
 void adc_init(void);
@@ -20,3 +23,5 @@ volatile uint8_t* hard_cal();
 int8_t pos_read_percent_x(uint8_t* calibration, uint8_t curr_pos_x);
 int8_t pos_read_percent_y(uint8_t* calibration, uint8_t curr_pos_y);
 pos_t pos_read(int8_t percent_x, int8_t percent_y);
+
+#endif // ADC_H

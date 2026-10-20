@@ -6,6 +6,9 @@
 #include "can_cmds.h"
 #include "can_ctrl.h"
 
+#ifndef CAN_COM_H
+#define CAN_COM_H
+
 typedef struct{ // veldig usikker på om dette er no interessant i det hele tatt
     //Start of frame bit
     uint16_t id;// siste bit her er Remote transmition request
@@ -17,3 +20,5 @@ void can_com_load_tx(Dataframe *frame);
 
 void can_com_transmit(const Dataframe *frame, uint8_t buffer);
 void can_com_receive(Dataframe *msg);
+
+#endif // CAN_COM_H
