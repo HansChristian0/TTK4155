@@ -32,8 +32,8 @@ void can_com_transmit(const Dataframe *frame, uint8_t buffer){
 
 
 void can_com_receive(Dataframe *msg){
-    if(!(can_ctrl_read(MCP_CANINTF) & 0x01)){
-        return;
+    while(!(can_ctrl_read(MCP_CANINTF) & 0x01)){
+        // return;
     }
 
     uint8_t sidh = can_ctrl_read(MCP_RXB0SIDH);
@@ -49,8 +49,8 @@ void can_com_receive(Dataframe *msg){
 
     for (uint8_t i = 0; i < msg->data_len; i++){
         msg->data[i] = can_ctrl_read(MCP_RXB0D0 + i);
-        printf("i=%d, data=%c, hex=0x%02X\r\n",i, msg->data[i], (unsigned char)msg->data[i]);
+        // printf("i=%d, data=%c, hex=0x%02X\r\n",i, msg->data[i], (unsigned char)msg->data[i]);
 
     }
-
+    can_ctrl_bit_modify(MCP_CANINTF,MCP_RX0IF,0x00);
 }

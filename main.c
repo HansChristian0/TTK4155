@@ -28,25 +28,28 @@ int main(void){
     DDRB &= ~(1<<PB0);
     //can_set_loopback();
     can_ctrl_init();
-    Dataframe msg;
+    Dataframe msg = {0};
     msg.id = 8;
     msg.data_len = 1;
     msg.data[0] = 'a';
     // msg.data[1] = 'b';
     // msg.data[2] = 'c';
     can_com_transmit(& msg,0x01);
-    
-    Dataframe new_msg;
-    printf("id: %d lengde: %d data: %d \r\n",new_msg.id,new_msg.data_len,new_msg.data);
+    msg.data[0]='b';
+    can_com_transmit(& msg,0x01);
+ 
+
+    can_com_transmit(& msg,0x01);
 
 
-    can_com_receive(&new_msg);
+    msg.data[0]='q';
+    msg.data[1]='r';
+    msg.data_len=2;
+    msg.id=10;
+    can_com_transmit(& msg,0x01);
 
-    printf("id: %d lengde: %d data: %c \r\n",new_msg.id,new_msg.data_len,new_msg.data[0]);
-    _delay_ms(1000);
 
-    printf("register verdien : %c", can_ctrl_read(MCP_RXB0D0));
-
+  
     while(1){}
     return 0;
     // oled_clear();

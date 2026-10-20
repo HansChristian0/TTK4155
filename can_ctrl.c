@@ -15,7 +15,7 @@ void can_ctrl_init(){
     can_ctrl_write(0x81,CNF3);
     //setter klokke til Nominal Bit Rate 1/8TQ
 
-    can_ctrl_write(0x40,CANCTRL); // setter til loopback til å begyne med
+    can_ctrl_write(0x00,CANCTRL); // setter til loopback til å begyne med
     can_ctrl_write(0x04, MCP_CANINTE);
 }
 
