@@ -24,7 +24,7 @@ int main()
 
     //inits
     CanInit can_init_parameters = {.phase2 = 1, .propag = 1, .phase1 = 2, .sjw = 1, .brp = 20, .smp = 0};
-    can_init(can_init_parameters,0);
+    can_init(can_init_parameters,1);
     uart_init(84000000, 115200); //velger baud basert på vibes
     //inits
 

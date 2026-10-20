@@ -115,15 +115,14 @@ static volatile CanMsg rx_buf[CAN_RX_BUF_SIZE];
     
 
 // Example CAN interrupt handler
-void CAN0_Handler(void){
-    char can_sr = CAN0->CAN_SR; 
+void CAN0_Handler(void){ // bruker interrupt med en sirkulær kø for å buffre disse tullekoppene
+    uint32_t can_sr = CAN0->CAN_SR; 
     
     // RX interrupt
     if(can_sr & (1 << rxMailbox)){
         // Add your message-handling code here
         CanMsg m;
         can_rx(&m);
-        can_printmsg(m);
         uint8_t next = (rx_head + 1) % CAN_RX_BUF_SIZE;
         if(next != rx_tail){
             rx_buf[rx_head] = m;
@@ -150,6 +149,6 @@ uint8_t can_rx_buffered(CanMsg* m){
     }
     *m = rx_buf[rx_tail];
     rx_tail = (rx_tail + 1) % CAN_RX_BUF_SIZE;
-    return 0;
+    return 1;
 }
 

@@ -62,6 +62,12 @@ volatile uint8_t* pos_calibrate(){
     return min_max_xy;
 }
 
+volatile uint8_t* hard_cal(){
+    static volatile uint8_t min_max_xy[4] = {66,248,62,252}; //to første er x nest er y min så max
+    
+    return min_max_xy;
+}
+
 int8_t pos_read_percent_x(uint8_t* calibration, uint8_t curr_pos_x){
     float neutral_x = (calibration[0] + calibration[1]) / 2.0f;
     float range = (calibration[1] - calibration[0]) / 2.0f;

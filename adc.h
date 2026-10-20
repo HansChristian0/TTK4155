@@ -14,6 +14,7 @@ typedef enum {
     NEUTRAL,
 } pos_t;
 
+volatile uint8_t* hard_cal();
 // pos_t pos_read(void);
 
 int8_t pos_read_percent_x(uint8_t* calibration, uint8_t curr_pos_x);
