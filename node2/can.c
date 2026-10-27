@@ -33,7 +33,8 @@ void can_init(CanInit init, uint8_t rxInterrupt){
     
     // Select CAN0 RX and TX in PIOA
     PIOA->PIO_ABSR &= ~(PIO_PA1A_CANRX0 | PIO_PA0A_CANTX0);
-    
+
+ 
     // Disable the Parallel IO (PIO) of the Rx and Tx pins so that the peripheral controller can use them
     PIOA->PIO_PDR = PIO_PA1A_CANRX0 | PIO_PA0A_CANTX0;
     
@@ -145,7 +146,7 @@ void CAN0_Handler(void){ // bruker interrupt med en sirkulær kø for å buffre 
     NVIC_ClearPendingIRQ(ID_CAN0);
 } 
 
-uint8_t can_rx_buffered(CanMsg* m){
+uint8_t can_rx_buffered(CanMsg* m){ // lager en sirkulær 
     if(rx_tail == rx_head){
         return 0;
     }

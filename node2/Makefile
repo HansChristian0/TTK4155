@@ -10,7 +10,7 @@ SOURCE_FILES = \
 	main.c \
 	uart.c \
 	can.c \
-#   filename2.c \
+    servo_pwm.c \
 #	filenameN.c
 
 # Feel free to ignore anything below this line

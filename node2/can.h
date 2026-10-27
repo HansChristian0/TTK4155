@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 
+
 // Struct with bit timing information
 // See `can_init` for usage example
 typedef struct CanInit CanInit;
@@ -93,6 +94,8 @@ uint8_t can_rx(CanMsg* m);
 void can_printmsg(CanMsg m);
 
 uint8_t can_rx_buffered(CanMsg* m);
+
+
 
 
 

@@ -4,6 +4,7 @@
 #include "uart.h"
 #include "time.h"
 #include "can.h"
+#include "servo_pwm.h"
 
 /*
  * Remember to update the Makefile with the (relative) path to the uart.c file.
@@ -26,6 +27,7 @@ int main()
     CanInit can_init_parameters = {.phase2 = 1, .propag = 1, .phase1 = 2, .sjw = 1, .brp = 20, .smp = 0};
     can_init(can_init_parameters,1);
     uart_init(84000000, 115200); //velger baud basert på vibes
+    pwm_init();
     //inits
 
 
