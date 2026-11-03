@@ -16,6 +16,18 @@ void can_printmsg(CanMsg m){
     printf("})\r\n");
 }
 
+void can_updatemsg(CanMsg m){
+    CanMsg a;
+    a.id = m.id;
+    a.length = m.length;
+    if(m.length){
+        a.byte[0] = m.byte[0];
+    }
+    for(uint8_t i = 1; i < m.length; i++){
+        a.byte[i] = m.byte[i];
+    }
+}
+
 
 #define txMailbox 0
 #define rxMailbox 1

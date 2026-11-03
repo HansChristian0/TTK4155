@@ -1,7 +1,12 @@
 #include "ir_adc.h"
 
+#define IR_LOW_THRES 150
+#define IR_HIGH_THRES 850
+
 static volatile uint16_t g_lives = 3;
 static volatile uint16_t g_bbl = 0; // ball block laser
+static volatile uint32_t g_release_count = 0; // ball block laser
+
 
 void ir_adc_init(){
     PMC->PMC_PCER1 |= PMC_PCER1_PID37; //skru på klokka for ADC i PMc id 37
@@ -15,10 +20,13 @@ void ir_adc_init(){
 
     //interrupt init
 
-    ADC->ADC_EMR |= ADC_EMR_CMPMODE_LOW | ADC_EMR_CMPFILTER_Msk | ADC_EMR_CMPSEL(0); // sette comp mode lav og 4 sucsessive lave målinger for å trigger interupt
-    ADC->ADC_CWR |= ADC_CWR_LOWTHRES(300) | ADC_CWR_HIGHTHRES(700); //setter low thres til 300 og high til 700
+    ADC->ADC_EMR |= ADC_EMR_CMPMODE_LOW | ADC_EMR_CMPSEL(0); // sette comp mode lav  fpr channel 0
+    ADC->ADC_CWR |= ADC_CWR_LOWTHRES(IR_LOW_THRES) | ADC_CWR_HIGHTHRES(IR_HIGH_THRES); //setter low thres til 300 og high til 700
     ADC->ADC_IER |= ADC_IER_COMPE; //aktivere comparativ interupt
+
     NVIC_EnableIRQ(ADC_IRQn);
+
+    ADC->ADC_CR |= ADC_CR_START;
     
 }
 
@@ -30,20 +38,27 @@ uint16_t ir_adc_read(){
 }
 
 void ADC_Handler(){
-    uint32_t status = ADC->ADC_ISR;
+    uint32_t status = ADC->ADC_ISR; //øleser ut interupt status reggiser
     if(status & ADC_ISR_COMPE){
-        if(!g_bbl){ //hvis sist interupt var på at ball ikke blokerte laser skal spiller miste et liv og interrupt se etter adc høy
+        printf("%d\r\n", g_bbl);
+        uint32_t emr = ADC->ADC_EMR & ~ADC_EMR_CMPMODE_Msk;
+        if(!g_bbl && ADC->ADC_CDR[0] < IR_LOW_THRES){ //hvis sist interupt var på at ball ikke blokerte laser skal spiller miste et liv og interrupt se etter adc høy
             g_bbl = 1;
-            g_lives--;
-            ADC->ADC_EMR |=ADC_EMR_CMPSEL(0) | ADC_EMR_CMPMODE_HIGH;
+            ADC->ADC_EMR = emr | ADC_EMR_CMPMODE_HIGH;
+            (void)ADC->ADC_ISR;
         }
-        else{ //om ball har blokkert ir og den går høy så setter vil bbl lav og interupt til å se etter lav
+        else if (g_bbl && ADC->ADC_CDR[0] < IR_HIGH_THRES) { //om ball har blokkert ir og den går høy så setter vil bbl lav og interupt til å se etter lav
             g_bbl = 0;
-            ADC->ADC_EMR |= ADC_EMR_CMPSEL(0) | ADC_EMR_CMPMODE_LOW;
+            g_release_count++;
+            ADC->ADC_EMR = emr | ADC_EMR_CMPMODE_LOW;
+            (void)ADC->ADC_ISR;
         }
     }
+    //time_spinFor(msecs(2));
+    // NVIC_ClearPendingIRQ(ADC_IRQn);
 }
 
-uint16_t ball_blocking(){
-    return g_bbl;
+
+uint32_t ir_release_count(void){
+    return g_release_count;
 }

@@ -43,19 +43,30 @@ int main()
     CanMsg m = {.id = 67, .length = 1, .byte8 = 'y'};
     volatile uint16_t adc_val = 0;
     can_tx(m);
+    uint32_t seen = 0;
+    uint32_t goals = 0;
     while (1)
     {
         /* code */
        
         if(can_rx_buffered(&m)){
-            can_printmsg(m);
-
-            
+            can_updatemsg(m);
         }
         pwm_servo_ctrl();
+        // printf("ir = %4lu  bbl = %u EMR = %08lx ISER1 = %08lx ISPR1 = %08lx PRIMASK = %lu\r\n",ADC->ADC_CDR[0], ball_blocking(),ADC->ADC_IMR,ADC->ADC_EMR,NVIC->ISER[1],NVIC->ISPR[1],__get_PRIMASK());
+        // time_spinFor(msecs(100));
+        // printf("ir = %lu\r\n", ADC->ADC_CDR[0]);
 
-        if(ball_blocking()){
-            printf("du suger du mista et liv git good");
+
+        // if(ball_blocking()){
+        //     printf("du suger du mista et liv git good\r\n");
+        // }
+
+        uint32_t releases = ir_release_count();
+        if (releases != seen) {
+            seen = releases;
+            goals++;
+            printf("GOAL!!! Current Score: %i\r\n", goals);
         }
     }
     

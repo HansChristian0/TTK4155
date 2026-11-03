@@ -95,6 +95,7 @@ void can_printmsg(CanMsg m);
 
 uint8_t can_rx_buffered(CanMsg* m);
 
+void can_updatemsg(CanMsg m);
 
 
 
