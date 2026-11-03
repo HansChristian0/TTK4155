@@ -6,6 +6,8 @@
 #include "can.h"
 #include "servo_pwm.h"
 #include "ir_adc.h"
+#include "encoder.h"
+#include "motor_drive.h"
 
 /*
  * Remember to update the Makefile with the (relative) path to the uart.c file.
@@ -35,6 +37,8 @@ int main()
     can_init(can_init_parameters,1);
     pwm_init();
     ir_adc_init();
+    encoder_init();
+    motor_drive_init();
     //inits
     
     
@@ -68,6 +72,11 @@ int main()
             goals++;
             printf("GOAL!!! Current Score: %i\r\n", goals);
         }
+
+        motor_move(10,0);
+        // uint32_t encoderPos = TC2->TC_CHANNEL[0].TC_CV;
+        // printf("%d\r\n",encoderPos);
+
     }
     
 }

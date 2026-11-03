@@ -9,7 +9,7 @@ void pwm_init(){
     PIOB->PIO_PDR |= (1 << 13); //gir pinen til periferien
     PWM->PWM_WPCR = (0x50574D << 8) | (7 << 1 ) | 0; //sender Key for å låse opp write protect for | låser opp alle siden jeg ikke vet hvilken vi trenger.. | disable write protect
     PWM->PWM_CH_NUM[1].PWM_CMR = PWM_CMR_CPRE_MCK_DIV_32;
-    PWM->PWM_CH_NUM[1].PWM_CPRD = PWM_DEF_CPRD;
+    PWM->PWM_CH_NUM[1].PWM_CPRD = PWM_DEF_CPRD; // setter prescaler så vi får 60 Hz
     PWM->PWM_CH_NUM[1].PWM_CDTY = PWM_DEF_CPRD / 7;
     PWM->PWM_ENA |= (1 << 1);
 }
@@ -19,11 +19,11 @@ void pwm_servo_ctrl(){
     if(can_rx_buffered(&joy_pos)){
         switch (joy_pos.byte[0])
         {
-        case POS_LEFT:
+        case POS_DOWN:
             PWM->PWM_CH_NUM[1].PWM_CDTY = PWM_DEF_CPRD - 2362;
 
             break;
-        case POS_RIGHT:
+        case POS_UP:
             PWM->PWM_CH_NUM[1].PWM_CDTY =PWM_DEF_CPRD - 5512;
             break;
         case POS_NEUTRAL:

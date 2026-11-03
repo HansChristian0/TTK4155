@@ -40,7 +40,6 @@ uint16_t ir_adc_read(){
 void ADC_Handler(){
     uint32_t status = ADC->ADC_ISR; //øleser ut interupt status reggiser
     if(status & ADC_ISR_COMPE){
-        printf("%d\r\n", g_bbl);
         uint32_t emr = ADC->ADC_EMR & ~ADC_EMR_CMPMODE_Msk;
         if(!g_bbl && ADC->ADC_CDR[0] < IR_LOW_THRES){ //hvis sist interupt var på at ball ikke blokerte laser skal spiller miste et liv og interrupt se etter adc høy
             g_bbl = 1;

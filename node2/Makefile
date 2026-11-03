@@ -12,7 +12,9 @@ SOURCE_FILES = \
 	can.c \
     servo_pwm.c \
 	ir_adc.c	\
-	time.c
+	time.c	\
+	encoder.c \
+	motor_drive.c
 
 # Feel free to ignore anything below this line
 VPATH:= $(dir $(SOURCE_FILES))
