@@ -5,6 +5,7 @@
 #include "time.h"
 #include "can.h"
 #include "servo_pwm.h"
+#include "ir_adc.h"
 
 /*
  * Remember to update the Makefile with the (relative) path to the uart.c file.
@@ -33,25 +34,29 @@ int main()
     CanInit can_init_parameters = {.phase2 = 1, .propag = 1, .phase1 = 2, .sjw = 1, .brp = 20, .smp = 0};
     can_init(can_init_parameters,1);
     pwm_init();
+    ir_adc_init();
     //inits
     
     
     //Uncomment after including uart above
 
     CanMsg m = {.id = 67, .length = 1, .byte8 = 'y'};
+    volatile uint16_t adc_val = 0;
     can_tx(m);
     while (1)
     {
         /* code */
-        // PIOB->PIO_SODR = PIO_PB27;
-        // for(int i = 0; i < 1000000;i++){}
-        // PIOB->PIO_CODR = PIO_PB27;
-        // for(int i = 0; i < 1000000;i++){}
+       
         if(can_rx_buffered(&m)){
             can_printmsg(m);
+
+            
         }
         pwm_servo_ctrl();
-        
+
+        if(ball_blocking()){
+            printf("du suger du mista et liv git good");
+        }
     }
     
 }
