@@ -13,9 +13,11 @@ void solenoide_activate(){
 }
 
 void solenoide_polling(CanMsg m){
-    printf("jeg trenger jesus");
+    static uint8_t prev = 0;
+   // printf("jeg trenger jesus");
     uint8_t joy_btn = m.byte[2];
-    if(joy_btn){
+    if(joy_btn && !prev){
         solenoide_activate();
     }
+    prev = joy_btn;
 }

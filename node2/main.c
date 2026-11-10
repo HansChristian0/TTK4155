@@ -42,6 +42,7 @@ int main()
     encoder_init();
     motor_drive_init();
     sample_timer_init();
+    solenoide_init();
     
     //inits
     volatile int32_t enc_center;
