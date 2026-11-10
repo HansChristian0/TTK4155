@@ -1,7 +1,6 @@
 #include "ir_adc.h"
 
-#define IR_LOW_THRES 150
-#define IR_HIGH_THRES 850
+
 
 static volatile uint16_t g_lives = 3;
 static volatile uint16_t g_bbl = 0; // ball block laser
@@ -46,13 +45,14 @@ void ADC_Handler(){
             ADC->ADC_EMR = emr | ADC_EMR_CMPMODE_HIGH;
             (void)ADC->ADC_ISR;
         }
-        else if (g_bbl && ADC->ADC_CDR[0] < IR_HIGH_THRES) { //om ball har blokkert ir og den går høy så setter vil bbl lav og interupt til å se etter lav
+        else if (g_bbl && ADC->ADC_CDR[0] > IR_HIGH_THRES) { //om ball har blokkert ir og den går høy så setter vil bbl lav og interupt til å se etter lav
             g_bbl = 0;
             g_release_count++;
             ADC->ADC_EMR = emr | ADC_EMR_CMPMODE_LOW;
             (void)ADC->ADC_ISR;
         }
     }
+
     //time_spinFor(msecs(2));
     // NVIC_ClearPendingIRQ(ADC_IRQn);
 }

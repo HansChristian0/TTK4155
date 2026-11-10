@@ -122,6 +122,7 @@ int main(void){
         direction = pos_read(percent_pos_x, percent_pos_y);
 
         joystick_to_can();
+
         oled_menu_select(menu_list, 7, direction);
         if(!(PINB & (1 << PB0))){
             printf("%s \r\n", menu_list[g_curr_page]);

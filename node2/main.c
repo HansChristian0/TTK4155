@@ -40,7 +40,7 @@ int main()
     encoder_init();
     motor_drive_init();
     //inits
-    
+
     
     //Uncomment after including uart above
 
@@ -54,18 +54,15 @@ int main()
         /* code */
        
         if(can_rx_buffered(&m)){
-            can_updatemsg(m);
+            motor_controller(m);    
+            pwm_servo_ctrl(m);
         }
-        pwm_servo_ctrl();
         // printf("ir = %4lu  bbl = %u EMR = %08lx ISER1 = %08lx ISPR1 = %08lx PRIMASK = %lu\r\n",ADC->ADC_CDR[0], ball_blocking(),ADC->ADC_IMR,ADC->ADC_EMR,NVIC->ISER[1],NVIC->ISPR[1],__get_PRIMASK());
         // time_spinFor(msecs(100));
         // printf("ir = %lu\r\n", ADC->ADC_CDR[0]);
 
 
-        // if(ball_blocking()){
-        //     printf("du suger du mista et liv git good\r\n");
-        // }
-
+        //printf("%d\r\n",ADC->ADC_CDR[0]);
         uint32_t releases = ir_release_count();
         if (releases != seen) {
             seen = releases;
@@ -73,7 +70,12 @@ int main()
             printf("GOAL!!! Current Score: %i\r\n", goals);
         }
 
-        motor_move(10,0);
+        
+        // printf("position = %d\r\n",m.byte[1]);
+        // motor_move(20,0);
+        // time_spinFor(msecs(500));
+        motor_move(50,0);
+        // time_spinFor(msecs(500));
         // uint32_t encoderPos = TC2->TC_CHANNEL[0].TC_CV;
         // printf("%d\r\n",encoderPos);
 
