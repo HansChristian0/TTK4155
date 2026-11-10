@@ -11,3 +11,8 @@ void encoder_init(){
     TC2->TC_CHANNEL[0].TC_CMR = TC_CMR_ABETRG | TC_CMR_TCCLKS_XC0; //setter TIOA som external trigger og setter XC0 som klokke
     TC2->TC_CHANNEL[0].TC_CCR = TC_CCR_CLKEN | TC_CCR_SWTRG; //enepler klokka og kjørere en software trigger som resetter count og starter klokke
 }
+
+
+int32_t encoder_read(){
+    return  (int32_t)TC2->TC_CHANNEL[0].TC_CV;
+}

@@ -8,6 +8,7 @@
 #include "ir_adc.h"
 #include "encoder.h"
 #include "motor_drive.h"
+#include "sample_timer.h"
 
 /*
  * Remember to update the Makefile with the (relative) path to the uart.c file.
@@ -39,9 +40,13 @@ int main()
     ir_adc_init();
     encoder_init();
     motor_drive_init();
-    //inits
-
+    sample_timer_init();
     
+    //inits
+    volatile uint16_t enc_center;
+    volatile int16_t enc_half;
+    motor_calibrate_encoder(&enc_center,&enc_half);
+    printf("enc_center = %d enc_half = %d \r\n",enc_center,enc_half);
     //Uncomment after including uart above
 
     CanMsg m = {.id = 67, .length = 1, .byte8 = 'y'};
@@ -49,15 +54,26 @@ int main()
     can_tx(m);
     uint32_t seen = 0;
     uint32_t goals = 0;
+    int dir = 1;
+
+    
     while (1)
     {
+        //printf("hei");
+
         /* code */
-       
         if(can_rx_buffered(&m)){
-            motor_controller(m);    
             pwm_servo_ctrl(m);
-        }
-        // printf("ir = %4lu  bbl = %u EMR = %08lx ISER1 = %08lx ISPR1 = %08lx PRIMASK = %lu\r\n",ADC->ADC_CDR[0], ball_blocking(),ADC->ADC_IMR,ADC->ADC_EMR,NVIC->ISER[1],NVIC->ISPR[1],__get_PRIMASK());
+            
+            if(g_reg_flag){
+                int8_t encoder = encoder_read();
+                motor_controller(m,encoder,enc_center,enc_half);    
+
+                g_reg_flag = 0;
+            }
+
+        }   
+         // printf("ir = %4lu  bbl = %u EMR = %08lx ISER1 = %08lx ISPR1 = %08lx PRIMASK = %lu\r\n",ADC->ADC_CDR[0], ball_blocking(),ADC->ADC_IMR,ADC->ADC_EMR,NVIC->ISER[1],NVIC->ISPR[1],__get_PRIMASK());
         // time_spinFor(msecs(100));
         // printf("ir = %lu\r\n", ADC->ADC_CDR[0]);
 
@@ -74,7 +90,6 @@ int main()
         // printf("position = %d\r\n",m.byte[1]);
         // motor_move(20,0);
         // time_spinFor(msecs(500));
-        motor_move(50,0);
         // time_spinFor(msecs(500));
         // uint32_t encoderPos = TC2->TC_CHANNEL[0].TC_CV;
         // printf("%d\r\n",encoderPos);
