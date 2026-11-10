@@ -52,10 +52,10 @@ void motor_move(uint16_t duty_cycle, uint16_t dir){
 }
 
 void motor_controller(CanMsg m, int16_t encoder, int16_t encoder_center, int16_t encoder_half){
-    float Kp = 1;
-    float Ki = 0;
+    float Kp = 0.6; //HC liker denne tuningen siden den er litt treig tilbake så han kan flikke baller
+    float Ki = 0.5;
     float T = 0.01;
-    int16_t err_sum = 0;
+    static int16_t err_sum = 0;
 //trenger å kalibrere encoderen
     int8_t joy_position = m.byte[1];
     // printf("encoder = %d joy_position = %d\r\n ",encoder-encoder_center,joy_position);

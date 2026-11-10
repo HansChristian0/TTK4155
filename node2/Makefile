@@ -16,6 +16,7 @@ SOURCE_FILES = \
 	encoder.c \
 	motor_drive.c \
 	sample_timer.c \
+	solenoide.c	\
 
 # Feel free to ignore anything below this line
 VPATH:= $(dir $(SOURCE_FILES))

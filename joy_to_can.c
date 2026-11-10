@@ -14,8 +14,9 @@ void joystick_to_can(){
     percent_pos_x = pos_read_percent_x(calibration, curr_pos_x);
     percent_pos_y = pos_read_percent_y(calibration, curr_pos_y);
     direction = pos_read(percent_pos_x, percent_pos_y);
+    uint8_t joy_btn = joystick_btn_pressed();
 
-    Dataframe m = {.id = 1, .data_len = 3, .data = {direction,percent_pos_x,percent_pos_y}};
+    Dataframe m = {.id = 1, .data_len = 3, .data = {direction,percent_pos_x,joy_btn}};
 
     can_com_transmit(&m,0x01);
 }
