@@ -21,20 +21,21 @@ void motor_drive_init(){
 
 }
 
-void motor_calibrate_encoder(uint16_t *encoder_center, uint16_t *encoder_half){
+void motor_calibrate_encoder(int32_t *encoder_center, int32_t *encoder_half){
     printf("kalibrerer.....");
-    int16_t encoder_left;
-    int16_t encoder_right;
+    int32_t encoder_left;
+    int32_t encoder_right;
 
-    motor_move(50,0);
+    motor_move(50,1);
     time_spinFor(msecs(1500));
     encoder_left = encoder_read();
-    motor_move(50,1);
+    motor_move(50,0);
     time_spinFor(msecs(1500));
     encoder_right = encoder_read();
     *encoder_center = (encoder_right + encoder_left)/2;
     *encoder_half = (encoder_right - encoder_left)/2;
-
+    printf("right = %d, left = %d ", encoder_right,encoder_left);
+    motor_move(0,0);
 }
 
 void motor_move(uint16_t duty_cycle, uint16_t dir){
@@ -51,7 +52,7 @@ void motor_move(uint16_t duty_cycle, uint16_t dir){
 }
 
 void motor_controller(CanMsg m, int16_t encoder, int16_t encoder_center, int16_t encoder_half){
-    float Kp = 0.33;
+    float Kp = 1;
     float Ki = 0;
     float T = 0.01;
     int16_t err_sum = 0;

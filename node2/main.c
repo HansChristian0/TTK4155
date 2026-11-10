@@ -43,8 +43,8 @@ int main()
     sample_timer_init();
     
     //inits
-    volatile uint16_t enc_center;
-    volatile int16_t enc_half;
+    volatile int32_t enc_center;
+    volatile int32_t enc_half;
     motor_calibrate_encoder(&enc_center,&enc_half);
     printf("enc_center = %d enc_half = %d \r\n",enc_center,enc_half);
     //Uncomment after including uart above
@@ -66,7 +66,7 @@ int main()
             pwm_servo_ctrl(m);
             
             if(g_reg_flag){
-                int8_t encoder = encoder_read();
+                int32_t encoder = encoder_read();
                 motor_controller(m,encoder,enc_center,enc_half);    
 
                 g_reg_flag = 0;
